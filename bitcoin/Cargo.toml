@@ -13,7 +13,7 @@ edition = "2018"
 exclude = ["tests", "contrib"]
 
 [features]
-default = [ "std", "secp-recovery", "serde" ]
+default = [ "std", "secp-recovery" ]
 rand-std = ["secp256k1/rand-std", "std"]
 rand = ["secp256k1/rand"]
 serde = ["actual-serde", "hashes/serde", "secp256k1/serde", "internals/serde"]
