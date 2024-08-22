@@ -47,10 +47,12 @@ pub const MAX_BLOCK_SIGOPS_COST: i64 = 80_000;
 pub const PUBKEY_ADDRESS_PREFIX_MAIN: u8 = 30;
 /// Mainnet (bitcoin) script address prefix.
 pub const SCRIPT_ADDRESS_PREFIX_MAIN: u8 = 22;
-/// Test (tesnet, signet, regtest) pubkey address prefix.
+/// Test (signet, regtest) pubkey address prefix.
 pub const PUBKEY_ADDRESS_PREFIX_TEST: u8 = 113; // 0x71
 /// Test (tesnet, signet, regtest) script address prefix.
 pub const SCRIPT_ADDRESS_PREFIX_TEST: u8 = 196; // 0xc4
+// Regtest (dogecoin) pubkey address prefix.
+pub const PUBKEY_ADDRESS_PREFIX_REGTEST: u8 = 111; // 0x6f
 /// The maximum allowed script size.
 pub const MAX_SCRIPT_ELEMENT_SIZE: usize = 520;
 /// How may blocks between halvings.

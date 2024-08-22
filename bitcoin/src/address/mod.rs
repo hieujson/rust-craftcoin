@@ -43,6 +43,7 @@ use crate::blockdata::constants::{
 use crate::blockdata::script::witness_program::WitnessProgram;
 use crate::blockdata::script::witness_version::WitnessVersion;
 use crate::blockdata::script::{self, Script, ScriptBuf, ScriptHash};
+use crate::constants::PUBKEY_ADDRESS_PREFIX_REGTEST;
 use crate::crypto::key::{PubkeyHash, PublicKey, TapTweak, TweakedPublicKey, UntweakedPublicKey};
 use crate::network::Network;
 use crate::prelude::*;
@@ -487,7 +488,8 @@ impl<V: NetworkValidation> Address<V> {
     fn fmt_internal(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         let p2pkh_prefix = match self.network() {
             Network::Bitcoin => PUBKEY_ADDRESS_PREFIX_MAIN,
-            Network::Testnet | Network::Signet | Network::Regtest => PUBKEY_ADDRESS_PREFIX_TEST,
+            Network::Testnet | Network::Signet => PUBKEY_ADDRESS_PREFIX_TEST,
+            Network::Regtest => PUBKEY_ADDRESS_PREFIX_REGTEST,
         };
         let p2sh_prefix = match self.network() {
             Network::Bitcoin => SCRIPT_ADDRESS_PREFIX_MAIN,
@@ -705,6 +707,31 @@ impl Address<NetworkUnchecked> {
             Some(AddressType::P2pkh) | Some(AddressType::P2sh)
         );
 
+        if is_legacy {
+            let type_internal = self.address_type_internal();
+            if type_internal.is_none() {
+                return false;
+            }
+            let type_internal = type_internal.unwrap();
+            return match type_internal {
+                AddressType::P2pkh => network == *self.network(),
+                AddressType::P2sh => network == *self.network() || (
+                    *self.network() == Network::Testnet
+                        && (network == Network::Regtest || network == Network::Signet)
+                ) || (
+                    *self.network() == Network::Regtest
+                        && (network == Network::Testnet || network == Network::Signet)
+                ) || (
+                    *self.network() == Network::Signet
+                        && (network == Network::Testnet || network == Network::Regtest)
+                ),
+                AddressType::P2wpkh => false,
+                AddressType::P2wsh => false,
+                AddressType::P2tr => false,
+            };
+
+        }
+
         match (self.network(), network) {
             (a, b) if *a == b => true,
             (Network::Bitcoin, _) | (_, Network::Bitcoin) => false,
@@ -824,6 +851,8 @@ impl FromStr for Address<NetworkUnchecked> {
                 (Network::Testnet, Payload::PubkeyHash(PubkeyHash::from_slice(&data[1..]).unwrap())),
             SCRIPT_ADDRESS_PREFIX_TEST =>
                 (Network::Testnet, Payload::ScriptHash(ScriptHash::from_slice(&data[1..]).unwrap())),
+            PUBKEY_ADDRESS_PREFIX_REGTEST =>
+                (Network::Regtest, Payload::PubkeyHash(PubkeyHash::from_slice(&data[1..]).unwrap())),
             x => return Err(ParseError::Base58(base58::Error::InvalidAddressVersion(x))),
         };
 
@@ -871,6 +900,23 @@ mod tests {
                 serde_json::from_str(&ser).expect("failed to deserialize address");
             assert_eq!(back.assume_checked(), *addr, "serde round-trip failed for {}", addr)
         }
+    }
+
+    #[test]
+    fn test_p2pkh_address_58_v0() {
+        let addr_from_str = Address::from_str("mwmtSDdGp1x3SWSf4zf7RuQBAtPxS2uoZL").unwrap();
+        let addr = Address::new(
+            Network::Regtest,
+            Payload::PubkeyHash("b25507cb0610af5c587c5f68fc8c00bc0dedd29f".parse().unwrap()),
+        );
+
+        assert_eq!(
+            addr.script_pubkey(),
+            ScriptBuf::from_hex("76a914b25507cb0610af5c587c5f68fc8c00bc0dedd29f88ac").unwrap()
+        );
+        assert_eq!(&addr.to_string(), "mwmtSDdGp1x3SWSf4zf7RuQBAtPxS2uoZL");
+        assert_eq!(addr.address_type(), Some(AddressType::P2pkh));
+        roundtrips(&addr);
     }
 
     #[test]
