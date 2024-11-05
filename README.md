@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Rust Dogecoin - IN DEVELOPMENT</h1>
+  <h1>Rust Luckycoin - IN DEVELOPMENT</h1>
 
   <img alt="Rust Bitcoin logo by Hunter Trujillo, see license and source files under /logo" src="./logo/rust-bitcoin.png" width="300" />
 
