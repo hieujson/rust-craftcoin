@@ -4,7 +4,7 @@
   <img alt="Rust Bitcoin logo by Hunter Trujillo, see license and source files under /logo" src="./logo/rust-bitcoin.png" width="300" />
 
   <p>Library with support for de/serialization, parsing and executing on data-structures
-    and network messages related to Dogecoin
+    and network messages related to luckycoincoin
   </p>
 
   <p>
@@ -22,11 +22,11 @@
 
 Supports (or should support)
 
-* De/serialization of Bitcoin protocol network messages
-* De/serialization of blocks and transactions
-* Script de/serialization
-* Private keys and address creation, de/serialization and validation (including full BIP32 support)
-* PSBT v0 de/serialization and all but the Input Finalizer role. Use [rust-miniscript](https://docs.rs/miniscript/latest/miniscript/psbt/index.html) to finalize.
+- De/serialization of Bitcoin protocol network messages
+- De/serialization of blocks and transactions
+- Script de/serialization
+- Private keys and address creation, de/serialization and validation (including full BIP32 support)
+- PSBT v0 de/serialization and all but the Input Finalizer role. Use [rust-miniscript](https://docs.rs/miniscript/latest/miniscript/psbt/index.html) to finalize.
 
 For JSONRPC interaction with Bitcoin Core, it is recommended to use
 [rust-bitcoincore-rpc](https://github.com/rust-bitcoin/rust-bitcoincore-rpc).
@@ -166,7 +166,7 @@ then run with `RUSTFLAGS='--cfg=mutate' cargo +nightly mutagen`.
 ### Code verification
 
 We have started using [kani](https://github.com/model-checking/kani), install with `cargo install --locked kani-verifier`
- (no need to run `cargo kani setup`). Run the tests with `cargo kani`.
+(no need to run `cargo kani setup`). Run the tests with `cargo kani`.
 
 ## Pull Requests
 
@@ -181,7 +181,7 @@ The CI pipeline requires approval before being run on each MR.
 
 In order to speed up the review process the CI pipeline can be run locally using
 [act](https://github.com/nektos/act). The `fuzz` and `Cross` jobs will be skipped when using `act`
-due to caching being unsupported at this time. We do not *actively* support `act` but will merge PRs
+due to caching being unsupported at this time. We do not _actively_ support `act` but will merge PRs
 fixing `act` issues.
 
 ### Githooks
@@ -189,6 +189,7 @@ fixing `act` issues.
 To assist devs in catching errors _before_ running CI we provide some githooks. If you do not
 already have locally configured githooks you can use the ones in this repository by running, in the
 root directory of the repository:
+
 ```
 git config --local core.hooksPath githooks/
 ```
@@ -204,7 +205,6 @@ maintenance burden and decrease API stability by adding support for other coins.
 
 Our code is public domain so by all means fork it and go wild :)
 
-
 ## Release Notes
 
 Release notes are done per crate, see:
@@ -212,7 +212,6 @@ Release notes are done per crate, see:
 - [bitcoin CHANGELOG](bitcoin/CHANGELOG.md)
 - [hashes CHANGELOG](hashes/CHANGELOG.md)
 - [internals CHANGELOG](internals/CHANGELOG.md)
-
 
 ## Licensing
 
