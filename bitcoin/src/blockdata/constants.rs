@@ -46,7 +46,7 @@ pub const MAX_BLOCK_SIGOPS_COST: i64 = 80_000;
 /// Mainnet (bitcoin) pubkey address prefix.
 pub const PUBKEY_ADDRESS_PREFIX_MAIN: u8 = 47;
 /// Mainnet (bitcoin) script address prefix.
-pub const SCRIPT_ADDRESS_PREFIX_MAIN: u8 = 47;
+pub const SCRIPT_ADDRESS_PREFIX_MAIN: u8 = 5;
 /// Test (signet, regtest) pubkey address prefix.
 pub const PUBKEY_ADDRESS_PREFIX_TEST: u8 = 47; // 0x71
 /// Test (tesnet, signet, regtest) script address prefix.
