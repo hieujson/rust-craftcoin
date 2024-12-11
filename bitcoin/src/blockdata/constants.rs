@@ -25,7 +25,7 @@ use crate::pow::CompactTarget;
 use crate::Amount;
 
 /// How many seconds between blocks we expect on average.
-pub const TARGET_BLOCK_SPACING: u32 = 600;
+pub const TARGET_BLOCK_SPACING: u32 = 60;
 /// How many blocks between diffchanges.
 pub const DIFFCHANGE_INTERVAL: u32 = 2016;
 /// How much time on average should occur between diffchanges.
@@ -44,11 +44,11 @@ pub const WITNESS_SCALE_FACTOR: usize = 4;
 /// The maximum allowed number of signature check operations in a block.
 pub const MAX_BLOCK_SIGOPS_COST: i64 = 80_000;
 /// Mainnet (bitcoin) pubkey address prefix.
-pub const PUBKEY_ADDRESS_PREFIX_MAIN: u8 = 47;
+pub const PUBKEY_ADDRESS_PREFIX_MAIN: u8 = 57;
 /// Mainnet (bitcoin) script address prefix.
 pub const SCRIPT_ADDRESS_PREFIX_MAIN: u8 = 5;
 /// Test (signet, regtest) pubkey address prefix.
-pub const PUBKEY_ADDRESS_PREFIX_TEST: u8 = 47; // 0x71
+pub const PUBKEY_ADDRESS_PREFIX_TEST: u8 = 16; // 0x71
 /// Test (tesnet, signet, regtest) script address prefix.
 pub const SCRIPT_ADDRESS_PREFIX_TEST: u8 = 5; // 0xc4
 // Regtest (luckycoincoin) pubkey address prefix.
@@ -56,11 +56,11 @@ pub const PUBKEY_ADDRESS_PREFIX_REGTEST: u8 = 47; // 0x6f
 /// The maximum allowed script size.
 pub const MAX_SCRIPT_ELEMENT_SIZE: usize = 520;
 /// How may blocks between halvings.
-pub const SUBSIDY_HALVING_INTERVAL: u32 = 210_000;
+pub const SUBSIDY_HALVING_INTERVAL: u32 = 100_000;
 /// Maximum allowed value for an integer in Script.
 pub const MAX_SCRIPTNUM_VALUE: u32 = 0x80000000; // 2^31
 /// Number of blocks needed for an output from a coinbase transaction to be spendable.
-pub const COINBASE_MATURITY: u32 = 100;
+pub const COINBASE_MATURITY: u32 = 70;
 
 /// Constructs and returns the coinbase (and only) transaction of the Bitcoin genesis block.
 fn bitcoin_genesis_tx() -> Transaction {
@@ -76,7 +76,7 @@ fn bitcoin_genesis_tx() -> Transaction {
     let in_script = script::Builder::new()
         .push_int(486604799)
         .push_int_non_minimal(4)
-        .push_slice(b"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks")
+        .push_slice(b"Big Brother Is Watching You #PRISM")
         .into_script();
     ret.input.push(TxIn {
         previous_output: OutPoint::null(),
@@ -86,10 +86,10 @@ fn bitcoin_genesis_tx() -> Transaction {
     });
 
     // Outputs
-    let script_bytes = hex!("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f");
+    let script_bytes = hex!("00");
     let out_script =
         script::Builder::new().push_slice(script_bytes).push_opcode(OP_CHECKSIG).into_script();
-    ret.output.push(TxOut { value: Amount::from_sat(50 * 100_000_000), script_pubkey: out_script });
+    ret.output.push(TxOut { value: Amount::from_sat(0), script_pubkey: out_script });
 
     // end
     ret
@@ -98,7 +98,7 @@ fn bitcoin_genesis_tx() -> Transaction {
 /// Constructs and returns the genesis block.
 pub fn genesis_block(network: Network) -> Block {
     let txdata = vec![bitcoin_genesis_tx()];
-    let hash: sha256d::Hash = sha256d::Hash::from_slice(&hex!("6f80efd038566e1e3eab3e1d38131604d06481e77f2462235c6a9a94b1f8abf9")).unwrap();
+    let hash: sha256d::Hash = sha256d::Hash::from_slice(&hex!("71af8a6b906ecef9cf9cb05a593639f6bd2db7cefb9b2ceaed9065b97b01fa35")).unwrap();
     let merkle_root = hash.into();
     match network {
         Network::Bitcoin => Block {
@@ -106,9 +106,9 @@ pub fn genesis_block(network: Network) -> Block {
                 version: block::Version::ONE,
                 prev_blockhash: Hash::all_zeros(),
                 merkle_root,
-                time: 1369199888,
+                time: 1371051790,
                 bits: CompactTarget::from_consensus(0x1e0ffff0),
-                nonce: 11288888,
+                nonce: 1848112,
                 aux_data: None,
             },
             txdata,
@@ -118,9 +118,9 @@ pub fn genesis_block(network: Network) -> Block {
                 version: block::Version::ONE,
                 prev_blockhash: Hash::all_zeros(),
                 merkle_root,
-                time: 1369199888,
+                time: 1371040850,
                 bits: CompactTarget::from_consensus(0x1e0ffff0),
-                nonce: 11288888,
+                nonce: 1521622,
                 aux_data: None,
             },
             txdata,
@@ -130,9 +130,9 @@ pub fn genesis_block(network: Network) -> Block {
                 version: block::Version::ONE,
                 prev_blockhash: Hash::all_zeros(),
                 merkle_root,
-                time: 1369199888,
+                time: 1371040850,
                 bits: CompactTarget::from_consensus(0x1e0ffff0),
-                nonce: 11288888,
+                nonce: 1521622,
                 aux_data: None,
             },
             txdata,
@@ -144,7 +144,7 @@ pub fn genesis_block(network: Network) -> Block {
                 merkle_root,
                 time: 1369199888,
                 bits: CompactTarget::from_consensus(0x1e0ffff0),
-                nonce: 11288888,
+                nonce: 12097647,
                 aux_data: None,
             },
             txdata,
@@ -165,13 +165,13 @@ impl ChainHash {
 
     //Luckycoin as no test networks, so all of em are set to mainnet
 
-    pub const BITCOIN: Self = Self([27, 84, 81, 229, 169, 79, 203, 67, 48, 141, 29, 89, 244, 50, 250, 145, 36, 196, 19, 104, 88, 24, 251, 59, 182, 98, 144, 153, 88, 206, 123, 155]);
+    pub const BITCOIN: Self = Self([100, 169, 20, 23, 70, 203, 190, 6, 199, 225, 164, 183, 242, 171, 185, 104, 204, 222, 186, 102, 205, 103, 193, 173, 209, 9, 27, 41, 219, 0, 87, 142]);
     /// `ChainHash` for testnet bitcoin.
-    pub const TESTNET: Self = Self([27, 84, 81, 229, 169, 79, 203, 67, 48, 141, 29, 89, 244, 50, 250, 145, 36, 196, 19, 104, 88, 24, 251, 59, 182, 98, 144, 153, 88, 206, 123, 155]);
+    pub const TESTNET: Self = Self([124, 240, 177, 93, 148, 201, 214, 147, 239, 202, 221, 86, 220, 158, 213, 15, 176, 18, 15, 130, 147, 228, 72, 7, 98, 60, 159, 237, 6, 57, 143, 30]);
     /// `ChainHash` for signet bitcoin.
-    pub const SIGNET: Self = Self([27, 84, 81, 229, 169, 79, 203, 67, 48, 141, 29, 89, 244, 50, 250, 145, 36, 196, 19, 104, 88, 24, 251, 59, 182, 98, 144, 153, 88, 206, 123, 155]);
+    pub const SIGNET: Self = Self([124, 240, 177, 93, 148, 201, 214, 147, 239, 202, 221, 86, 220, 158, 213, 15, 176, 18, 15, 130, 147, 228, 72, 7, 98, 60, 159, 237, 6, 57, 143, 30]);
     /// `ChainHash` for regtest bitcoin.
-    pub const REGTEST: Self = Self([27, 84, 81, 229, 169, 79, 203, 67, 48, 141, 29, 89, 244, 50, 250, 145, 36, 196, 19, 104, 88, 24, 251, 59, 182, 98, 144, 153, 88, 206, 123, 155]);
+    pub const REGTEST: Self = Self([50, 70, 53, 200, 227, 111, 102, 59, 10, 219, 18, 106, 33, 173, 11, 215, 250, 67, 204, 92, 95, 21, 174, 201, 146, 191, 77, 222, 101, 11, 192, 234]);
 
     /// Returns the hash of the `network` genesis block for use as a chain hash.
     ///
@@ -232,15 +232,15 @@ mod test {
         assert_eq!(gen.header.prev_blockhash, Hash::all_zeros());
         assert_eq!(
             gen.header.merkle_root.to_string(),
-            "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"
+            "71af8a6b906ecef9cf9cb05a593639f6bd2db7cefb9b2ceaed9065b97b01fa35"
         );
 
-        assert_eq!(gen.header.time, 1231006505);
-        assert_eq!(gen.header.bits, CompactTarget::from_consensus(0x1d00ffff));
-        assert_eq!(gen.header.nonce, 2083236893);
+        assert_eq!(gen.header.time, 1371051790);
+        assert_eq!(gen.header.bits, CompactTarget::from_consensus(0x1e0ffff0));
+        assert_eq!(gen.header.nonce, 1848112);
         assert_eq!(
             gen.header.block_hash().to_string(),
-            "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+            "64a9141746cbbe06c7e1a4b7f2abb968ccdeba66cd67c1add1091b29db00578e"
         );
     }
 
@@ -254,7 +254,7 @@ mod test {
             "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"
         );
         assert_eq!(gen.header.time, 1296688602);
-        assert_eq!(gen.header.bits, CompactTarget::from_consensus(0x1d00ffff));
+        assert_eq!(gen.header.bits, CompactTarget::from_consensus(0x1e0ffff0));
         assert_eq!(gen.header.nonce, 414098458);
         assert_eq!(
             gen.header.block_hash().to_string(),

@@ -204,14 +204,17 @@ impl Decodable for ServiceFlags {
 pub struct Magic(pub [u8; 4]);
 
 impl Magic {
-    /// Bitcoin mainnet network magic bytes.
-    pub const BITCOIN: Self = Self([0xc0, 0xc0, 0xc0, 0xc0]);
-    /// Bitcoin testnet network magic bytes.
-    pub const TESTNET: Self = Self([0xfc, 0xc1, 0xb7, 0xdc]);
-    /// Bitcoin signet network magic bytes.
-    pub const SIGNET: Self = Self([0x0A, 0x03, 0xCF, 0x40]);
-    /// Bitcoin regtest network magic bytes.
-    pub const REGTEST: Self = Self([0xFA, 0xBF, 0xB5, 0xDA]);
+    /// Bitcoin mainnet network magic bytes
+    pub const BITCOIN: Self = Self([0xfc, 0xd9, 0xb7, 0xdd]);
+    
+    /// Bitcoin testnet network magic bytes
+    pub const TESTNET: Self = Self([0xfb, 0xc0, 0xb8, 0xdb]);
+    
+    /// Bitcoin signet network magic bytes
+    pub const SIGNET: Self = Self([0xfb, 0xc0, 0xb8, 0xdb]);
+    
+    /// Bitcoin regtest network magic bytes 
+    pub const REGTEST: Self = Self([0xfc, 0xc1, 0xb7, 0xdc]);
 
     /// Create network magic from bytes.
     pub fn from_bytes(bytes: [u8; 4]) -> Magic { Magic(bytes) }
@@ -408,10 +411,10 @@ mod tests {
     #[test]
     fn magic_from_str() {
         let known_network_magic_strs = [
-            ("c0c0c0c0", Network::Bitcoin),
-            ("fcc1b7dc", Network::Testnet),
-            ("fabfb5da", Network::Regtest),
-            ("0a03cf40", Network::Signet),
+            ("fcd9b7dd", Network::Bitcoin),
+            ("fbc0b8db", Network::Testnet),
+            ("fcc1b7dc", Network::Regtest),
+            ("fbc0b8db", Network::Signet),
         ];
 
         for (magic_str, network) in &known_network_magic_strs {

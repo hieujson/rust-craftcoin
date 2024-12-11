@@ -54,70 +54,65 @@ impl Params {
         match network {
             Network::Bitcoin => Params {
                 network: Network::Bitcoin,
-                bip16_time: 1333238400,                 // Apr 1 2012
-
-                //https://github.com/LuckyCoinProj/luckycoinV3/blob/master/src/chainparams.cpp see ln 87
-
-                bip34_height: 0, // 
-                bip65_height:  8460, // 
-                bip66_height:  8460, // 
-                rule_change_activation_threshold: 9576, // 95%
-                miner_confirmation_window: 10080,
+                bip16_time: 1333238400,  // Apr 1 2012
+                // From chainparams.cpp consensus section
+                bip34_height: 0x210c,    // BIP34Height from consensus
+                bip65_height: 0x210c,    // BIP65Height from consensus 
+                bip66_height: 0x210c,    // BIP66Height from consensus
+                rule_change_activation_threshold: 9576, // 95% of 10,080
+                miner_confirmation_window: 10080,      // 60 * 24 * 7 = 10,080 blocks, or one week
                 pow_limit: Target::MAX_ATTAINABLE_MAINNET,
-                pow_target_spacing: 60,            // 1 minutes.
-                pow_target_timespan: 4 * 60 * 60, // 4 hours.
+                pow_target_spacing: 60,   // 1 minute from nPowTargetSpacing
+                pow_target_timespan: 24 * 60 * 60, // 1 day from nPowTargetTimespan
                 allow_min_difficulty_blocks: false,
                 no_pow_retargeting: false,
             },
             Network::Testnet => Params {
                 network: Network::Testnet,
-                bip16_time: 1333238400,                 // Apr 1 2012
-                bip34_height: 0, // 0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8
-                bip65_height: 8460, // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
-                bip66_height: 8460, // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
-                rule_change_activation_threshold: 2880, // 75%
-                miner_confirmation_window: 2016,
+                bip16_time: 1333238400,
+                bip34_height: 99999999,  // From consensus
+                bip65_height: 99999999,  // From consensus
+                bip66_height: 99999999,  // From consensus
+                rule_change_activation_threshold: 9576, // 95% of 10,080
+                miner_confirmation_window: 10080,
                 pow_limit: Target::MAX_ATTAINABLE_TESTNET,
-                pow_target_spacing: 60,            // 1 minutes.
-
-                //https://github.com/LuckyCoinProj/luckycoinV3/blob/master/src/chainparams.cpp see ln 93
-
-                pow_target_timespan: 20 * 60, // 4 hours.
-                allow_min_difficulty_blocks: true,
+                pow_target_spacing: 60,   // 1 minute
+                pow_target_timespan: 4 * 60 * 60, // 4 hours from consensus
+                allow_min_difficulty_blocks: true, // from fPowAllowMinDifficultyBlocks
                 no_pow_retargeting: false,
             },
             Network::Signet => Params {
                 network: Network::Signet,
-                bip16_time: 1333238400, // Apr 1 2012
-                bip34_height: 0,
-                bip65_height: 8460,
-                bip66_height: 8460,
-                rule_change_activation_threshold: 1916, // 95%
-                miner_confirmation_window: 2016,
+                bip16_time: 1333238400,
+                bip34_height: 99999999,
+                bip65_height: 99999999,
+                bip66_height: 99999999,
+                rule_change_activation_threshold: 9576,
+                miner_confirmation_window: 10080,
                 pow_limit: Target::MAX_ATTAINABLE_SIGNET,
-                pow_target_spacing: 60,            // 10 minutes.
-                pow_target_timespan: 20 * 60, // 2 weeks.
-                allow_min_difficulty_blocks: false,
+                pow_target_spacing: 60,   // 1 minute
+                pow_target_timespan: 4 * 60 * 60, // 4 hours
+                allow_min_difficulty_blocks: true,
                 no_pow_retargeting: false,
             },
             Network::Regtest => Params {
                 network: Network::Regtest,
-                bip16_time: 1333238400,  // Apr 1 2012
-                bip34_height: 0, // not activated on regtest
-                bip65_height: 8460,
-                bip66_height: 8460,                    // used only in rpc tests
-                rule_change_activation_threshold: 108, // 75%
-                miner_confirmation_window: 144,
+                bip16_time: 1333238400,
+                bip34_height: 99999999,
+                bip65_height: 99999999,
+                bip66_height: 99999999,
+                rule_change_activation_threshold: 9576,
+                miner_confirmation_window: 10080,
                 pow_limit: Target::MAX_ATTAINABLE_REGTEST,
-                pow_target_spacing: 60,            // 1 second.
-                pow_target_timespan: 20 * 60, // 4 hours
+                pow_target_spacing: 60,   // 1 minute spacing between blocks
+                pow_target_timespan: 4 * 60 * 60, // 4 hours timespan
                 allow_min_difficulty_blocks: true,
-                no_pow_retargeting: true,
+                no_pow_retargeting: false,
             },
         }
     }
 
-    /// Calculates the number of blocks between difficulty adjustments.
+    /// Calculates the number of blocks between difficulty adjustments
     pub fn difficulty_adjustment_interval(&self) -> u64 {
         self.pow_target_timespan / self.pow_target_spacing
     }
